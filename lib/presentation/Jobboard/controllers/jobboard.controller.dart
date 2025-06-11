@@ -23,7 +23,7 @@ class JobboardController extends GetxController {
 
   // API base URL - IMPORTANT: Use your Laravel development server IP or URL
   final String _baseUrl =
-      'http://127.0.0.1:8000/api/jobs'; // For Android emulator, use 10.0.2.2. For iOS simulator/real device, use your machine's IP.
+      'https://backend-rekruit-id-production.up.railway.app/api/jobs'; // For Android emulator, use 10.0.2.2. For iOS simulator/real device, use your machine's IP.
 
   @override
   void onInit() {

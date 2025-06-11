@@ -46,7 +46,8 @@ class JobDetailController extends GetxController {
   final RxString errorMessage = ''.obs;
 
   // API base URL - IMPORTANT: Use your Laravel development server IP or URL
-  final String _baseUrl = 'http://127.0.0.1:8000/api/jobs'; // Adjust as needed
+  final String _baseUrl =
+      'https://backend-rekruit-id-production.up.railway.app/api/jobs'; // Adjust as needed
 
   /// Fetches job details for a given job ID.
   Future<void> fetchJobDetail(String jobId) async {
