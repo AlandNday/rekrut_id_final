@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:rekrut_id_final/Models/jobmodel.dart';
 import 'package:rekrut_id_final/infrastructure/navigation/routes.dart';
-
+import 'package:rekrut_id_final/presentation/Jobboard/controllers/jobboard.controller.dart';
 import 'controllers/home.controller.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
-
-  // Define static color constants for consistency and easy modification.
   static const Color primaryColor = Color(0xFF4A148C); // Dark purple background
-  static const Color accentColor = Color(
-    0xFFE040FB,
-  ); // Vibrant pink/light purple for accents
-  static const Color textColor = Colors.white; // General text color
-  static const Color secondaryTextColor = Color(
-    0xFFB39DDB,
-  ); // Lighter purple for subtle text/icons
-  static const Color cardColor = Color(
-    0xFF6A1B9A,
-  ); // Slightly lighter purple for card backgrounds
+  static const Color accentColor = Color(0xFFE040FB);
+  static const Color textColor = Colors.white;
+  static const Color secondaryTextColor = Color(0xFFB39DDB);
+  static const Color cardColor = Color(0xFF6A1B9A);
 
   @override
   Widget build(BuildContext context) {
+    // Inject JobboardController here so it's available for this screen
+    final JobboardController jobboardController =
+        Get.find<JobboardController>();
+
     // Scaffold provides the basic visual structure for the material design app.
     return Scaffold(
       backgroundColor: primaryColor, // Set the main background color
@@ -33,10 +29,22 @@ class HomeScreen extends GetView<HomeController> {
           children: [
             _buildHeader(), // Top navigation and branding
             _buildHeroSection(), // Large introductory section with title and buttons
-            _buildJobCategorySection(), // Section for job categories/types
+            Padding(
+              padding: const EdgeInsets.only(left: 140, right: 100),
+              child: _buildJobCategorySection(
+                jobboardController,
+              ), // Pass the controller
+            ), // Section for job categories/types
             _buildCompanyLogosSection(), // Section showcasing partner companies
-            _buildWorkEnvironmentSection(), // Section about work environment benefits
-            _buildAcademySection(), // Section for the academy/knowledge sharing
+            Row(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // Align content to the top
+              children: [
+                Expanded(child: _buildWorkEnvironmentSection()),
+                Expanded(child: _buildAcademySection()),
+              ],
+            ), // Section about work environment benefits
+            // Section for the academy/knowledge sharing
             _buildFooter(), // Bottom section with links and copyright
           ],
         ),
@@ -51,12 +59,15 @@ class HomeScreen extends GetView<HomeController> {
       child: Row(
         children: [
           // Branding Logo
-          const Text(
-            'R',
-            style: TextStyle(
-              color: accentColor,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
+          Transform.rotate(
+            angle: 270,
+            child: const Text(
+              'R',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 80,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           const SizedBox(width: 50), // Spacing after the logo
@@ -69,10 +80,11 @@ class HomeScreen extends GetView<HomeController> {
                     MainAxisSize.min, // Make the Row take minimum space
                 children: [
                   _buildNavLink('Home', 'HOME'),
-                  _buildNavLink('Company', ''),
-                  _buildNavLink('Jobs and vacancies', 'JOBBOARD'),
-                  _buildNavLink('Contact', ''),
-                  _buildNavLink('About Us', ''),
+                  _buildNavLink('Jobs', 'JOBBOARD'),
+                  _buildNavLink(
+                    'Contact us',
+                    'CONTACTUS',
+                  ), // Added route for Contact Us
                 ],
               ),
             ),
@@ -83,7 +95,7 @@ class HomeScreen extends GetView<HomeController> {
             children: [
               _buildTextButton('Register', () {}),
               const SizedBox(width: 10),
-              _buildElevatedButton('Login', () {}),
+              _buildElevatedButton('Login', Colors.white, () {}),
             ],
           ),
         ],
@@ -97,16 +109,24 @@ class HomeScreen extends GetView<HomeController> {
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: TextButton(
         onPressed: () {
-          switch (text) {
-            case 'Jobs and vacancies':
+          switch (Route) {
+            // Changed to use Route parameter
+            case 'JOBBOARD':
               Get.toNamed(Routes.JOBBOARD);
-              break; // Don't forget 'break' to exit the switch
-            case 'About Us':
+              break;
+            case 'ABOUTUS':
               Get.toNamed(Routes.ABOUTUS);
-              break; // Don't forget 'break' to exit the switch
-            case 'Contact':
+              break;
+            case 'CONTACTUS':
               Get.toNamed(Routes.CONTACTUS);
-              break; // Don't forget 'break' to exit the switch
+              break;
+            case 'HOME':
+              Get.toNamed(
+                Routes.HOME,
+              ); // Assuming you want to navigate to home itself
+              break;
+            default:
+              break;
           }
         },
         child: Text(
@@ -128,13 +148,14 @@ class HomeScreen extends GetView<HomeController> {
   /// Helper widget for creating a styled elevated button with optional icon.
   Widget _buildElevatedButton(
     String text,
+    Color color,
     VoidCallback onPressed, {
     IconData? icon,
   }) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: accentColor, // Button background color
+        backgroundColor: color, // Button background color
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ), // Rounded corners
@@ -144,10 +165,10 @@ class HomeScreen extends GetView<HomeController> {
         mainAxisSize: MainAxisSize.min, // Make the row take minimum space
         children: [
           if (icon != null)
-            Icon(icon, color: textColor, size: 18), // Optional icon
+            Icon(icon, color: Colors.black, size: 18), // Optional icon
           if (icon != null)
             const SizedBox(width: 8), // Spacing between icon and text
-          Text(text, style: TextStyle(color: textColor, fontSize: 16)),
+          Text(text, style: TextStyle(color: Colors.black, fontSize: 16)),
         ],
       ),
     );
@@ -156,7 +177,7 @@ class HomeScreen extends GetView<HomeController> {
   /// Builds the main hero section with the large headline and call-to-action buttons.
   Widget _buildHeroSection() {
     return Container(
-      padding: const EdgeInsets.all(40.0),
+      padding: const EdgeInsets.only(left: 150, top: 100, bottom: 40),
       alignment: Alignment.centerLeft, // Align content to the left
       // minHeight ensures the section has a minimum height, adjusting dynamically
       constraints: BoxConstraints(minHeight: Get.height * 0.4),
@@ -188,32 +209,11 @@ class HomeScreen extends GetView<HomeController> {
           // Action buttons
           Row(
             children: [
-              _buildElevatedButton(
-                'Start',
-                () {},
-                icon: Icons.arrow_outward,
-              ), // Elevated button with icon
+              _buildElevatedButton('Start', Colors.white, () {
+                Get.toNamed(Routes.JOBBOARD);
+              }, icon: Icons.arrow_outward), // Elevated button with icon
               const SizedBox(width: 20), // Spacing between buttons
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(
-                    color: accentColor,
-                    width: 2,
-                  ), // Border color and width
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                ),
-                child: const Text(
-                  'About Us',
-                  style: TextStyle(color: accentColor, fontSize: 16),
-                ),
-              ),
+              // OutlinedButton removed as per original comment
             ],
           ),
         ],
@@ -221,65 +221,102 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  /// Builds the section displaying job categories (Asama, Figma) and job listings.
-  Widget _buildJobCategorySection() {
-    return Padding(
-      padding: const EdgeInsets.all(40.0),
-      child: Row(
-        crossAxisAlignment:
-            CrossAxisAlignment.start, // Align children to the top
-        children: [
-          // Asama Category Card
-          Expanded(
-            child: _buildCategoryCard(
-              title: 'Asama',
-              description:
-                  'For managing all your work, planning, tasks, team coordination and projects, Asama is essential.',
+  /// Builds the section displaying job categories (Asama, Figma, Development) and job listings.
+  Widget _buildJobCategorySection(JobboardController jobboardController) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start, // Align children to the top
+      children: [
+        Column(
+          children: [
+            const SizedBox(height: 60),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildCategoryCard(
+                  title: 'Asama',
+                  image: 'images/asana.png',
+                  description:
+                      'managing all your work, planning, tasks, team coordination and projects using Asama.',
+                  icon: Icons
+                      .design_services, // Placeholder icon, replace with actual design
+                  iconColor: Colors.orange,
+                  buttonText: 'Let us about your needs',
+                ),
+                const SizedBox(width: 30), // Spacing between cards
+                // Figma Category Card
+                _buildCategoryCard(
+                  title: 'Figma',
+                  image: 'images/figma.png',
+                  description:
+                      'integrating all the design and workflow elements into a simple layout in Figma',
+                  icon: Icons.brush, // Placeholder icon
+                  iconColor: Colors.pink,
+                  buttonText: 'Tell us about your needs',
+                ),
+              ],
+            ),
+            _buildCategoryCard(
+              // This card is centered in the original code, hence not in a Row
+              title: 'Development',
+              image: 'images/code.png',
+              description: 'To develop sites and applications ',
               icon: Icons
                   .design_services, // Placeholder icon, replace with actual design
               iconColor: Colors.orange,
               buttonText: 'Let us about your needs',
             ),
-          ),
-          const SizedBox(width: 30), // Spacing between cards
-          // Figma Category Card
-          Expanded(
-            child: _buildCategoryCard(
-              title: 'Figma',
-              description:
-                  'By integrating all the design and workflow elements into a simple layout Figma is the best way to work.',
-              icon: Icons.brush, // Placeholder icon
-              iconColor: Colors.pink,
-              buttonText: 'Tell us about your needs',
+            const SizedBox(height: 40), // Spacing after category cards
+            _buildElevatedButton(
+              'Tell us about your skills',
+              accentColor,
+              () {},
             ),
-          ),
-          const SizedBox(width: 30), // Spacing between cards
-          // Job Listing Cards Column
-          Expanded(
-            child: Column(
-              children: [
-                _buildJobListingCard(
-                  jobTitle: 'Regional Creative Facilitator',
-                  company: 'Asama - RekrutID Co',
-                  location: 'New York, USA',
-                  salary: '\$20000-\$32000',
-                  logoColor:
-                      Colors.yellow, // Placeholder color for company logo
+            const SizedBox(height: 40),
+          ],
+        ),
+        const SizedBox(
+          width: 100,
+        ), // Adjusted spacing between category cards and job listings
+        // Job Listing Cards Column
+        Expanded(
+          // Use Expanded to allow job listings to take available space
+          child: Obx(() {
+            // Use Obx to react to changes in filteredJobs
+            final List<Job> recentJobs = jobboardController.filteredJobs
+                .take(2)
+                .toList();
+            if (recentJobs.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No recent jobs available.',
+                  style: TextStyle(color: textColor, fontSize: 18),
                 ),
-                const SizedBox(height: 30), // Spacing between job listings
-                _buildJobListingCard(
-                  jobTitle: 'Forward Security Director',
-                  company: 'Hotels & Tourims',
-                  location: 'New York, USA',
-                  salary: '\$40000-\$42000',
-                  logoColor:
-                      Colors.redAccent, // Placeholder color for company logo
+              );
+            }
+            return Column(
+              children: [
+                const SizedBox(height: 60), // Align with category cards
+                ...recentJobs.map(
+                  (job) => Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 30.0,
+                    ), // Spacing between job listings
+                    child: _buildJobListingCard(
+                      jobID: job.id,
+                      jobTitle: job.title,
+                      company: job.company,
+                      location: job.location,
+                      salary: job.salary,
+                      logoColor: Colors
+                          .blueAccent, // You might want to map company to a specific color or use an actual logo
+                    ),
+                  ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
+            );
+          }),
+        ),
+      ],
     );
   }
 
@@ -288,13 +325,15 @@ class HomeScreen extends GetView<HomeController> {
     required String title,
     required String description,
     required IconData icon,
+    required String image,
     required Color iconColor,
     required String buttonText,
   }) {
     return Container(
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.all(0),
+      width: 300,
       decoration: BoxDecoration(
-        color: cardColor,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -304,18 +343,19 @@ class HomeScreen extends GetView<HomeController> {
           Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.2), // Light background for icon
-              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(image: AssetImage(image)),
             ),
-            child: Icon(icon, size: 30, color: iconColor),
           ),
           const SizedBox(height: 20),
-          Text(
-            title,
-            style: const TextStyle(
-              color: textColor,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+          Center(
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: textColor,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 10),
@@ -331,89 +371,112 @@ class HomeScreen extends GetView<HomeController> {
 
   /// Helper widget for creating a job listing card.
   Widget _buildJobListingCard({
+    required String jobID,
     required String jobTitle,
     required String company,
     required String location,
     required String salary,
     required Color logoColor, // Placeholder for company logo's dominant color
   }) {
-    return Container(
-      padding: const EdgeInsets.all(25),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              // Placeholder for company logo
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color:
-                      logoColor, // Use provided color as a placeholder background
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                // In a real app, this would be an Image.asset or NetworkImage
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      jobTitle,
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        width: 599,
+        padding: const EdgeInsets.all(25),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                // Placeholder for company logo
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: logoColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Text(
+                      company[0], // Display first letter of company name as logo
                       style: const TextStyle(
-                        color: textColor,
-                        fontSize: 18,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        fontSize: 24,
                       ),
                     ),
+                  ),
+                ),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        jobTitle,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        company,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(
+                  Icons.bookmark_border,
+                  color: Colors.black,
+                ), // Bookmark icon
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Location info
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.location_on,
+                      color: Colors.black,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 5),
                     Text(
-                      company,
-                      style: TextStyle(color: secondaryTextColor, fontSize: 14),
+                      location,
+                      style: const TextStyle(color: Colors.black, fontSize: 14),
                     ),
                   ],
                 ),
-              ),
-              Icon(
-                Icons.bookmark_border,
-                color: secondaryTextColor,
-              ), // Bookmark icon
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Location info
-              Row(
-                children: [
-                  Icon(Icons.location_on, color: secondaryTextColor, size: 16),
-                  const SizedBox(width: 5),
-                  Text(
-                    location,
-                    style: TextStyle(color: secondaryTextColor, fontSize: 14),
+                // Salary info
+                Text(
+                  salary,
+                  style: const TextStyle(
+                    color: Colors
+                        .black, // Changed to black for visibility on white card
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
-              // Salary info
-              Text(
-                salary,
-                style: const TextStyle(
-                  color: textColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          _buildElevatedButton('Apply Now', () {}), // Apply button
-        ],
+              ],
+            ),
+            const SizedBox(height: 20),
+            _buildElevatedButton('Apply Now', accentColor, () {
+              Get.toNamed(Routes.JOB_DETAIL, arguments: jobID);
+            }), // Apply button
+          ],
+        ),
       ),
     );
   }
@@ -421,94 +484,64 @@ class HomeScreen extends GetView<HomeController> {
   /// Builds the section displaying partner company logos.
   Widget _buildCompanyLogosSection() {
     // List of company names to display as placeholders for logos.
-    final List<String> companies = [
-      'Triple Whale',
-      'Handcash',
-      'AscendEX',
-      'TROVE MATE',
-      'Vera',
-      'flywallet',
-      'SOCLLY',
-      'Rycrypto',
-      'dorphin',
-    ];
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 60),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // This is the large 'Y' like shape on the left.
-              // In a real application, this would likely be an SVG asset or a custom painter
-              // to replicate the exact complex shape from the design.
-              Container(
-                width: 100, // Approximate width
-                height: 200, // Approximate height
-                decoration: BoxDecoration(
-                  color: accentColor.withOpacity(
-                    0.3,
-                  ), // Faded accent color as background
-                  borderRadius: BorderRadius.circular(20), // Rounded corners
+    return Container(
+      color: const Color.fromARGB(62, 24, 177, 1),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 60),
+        child: Column(
+          children: [
+            // Action buttons below the logos
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: Image.asset(
+                    'images/62beb4986f50ddd864c0a59e_forme-wrap.svg.png',
+                  ),
                 ),
-                child: Center(
-                  child: Text(
-                    'Shape Placeholder', // Text as a temporary representation
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: accentColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                const SizedBox(width: 300),
+                Column(
+                  children: [
+                    Image.asset('images/div(2).png'),
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        _buildElevatedButton('want work?', Colors.white, () {
+                          Get.toNamed(Routes.JOBBOARD);
+                        }, icon: Icons.arrow_outward),
+                        const SizedBox(width: 20),
+                        OutlinedButton(
+                          onPressed: () {
+                            Get.toNamed(Routes.CONTACTUS);
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(
+                              color: accentColor,
+                              width: 2,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
+                          ),
+                          child: const Text(
+                            'Talk with us',
+
+                            style: TextStyle(color: accentColor, fontSize: 16),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 40), // Spacing between shape and logos
-              // Company logos displayed using a Wrap widget for flexible layout.
-              Expanded(
-                child: Wrap(
-                  spacing: 40.0, // Horizontal spacing between logos
-                  runSpacing: 40.0, // Vertical spacing between rows of logos
-                  alignment:
-                      WrapAlignment.center, // Center align logos in the wrap
-                  children: companies
-                      .map((name) => _buildCompanyLogoPlaceholder(name))
-                      .toList(),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 50), // Spacing before buttons
-          // Action buttons below the logos
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildElevatedButton(
-                'What work?',
-                () {},
-                icon: Icons.arrow_outward,
-              ),
-              const SizedBox(width: 20),
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: accentColor, width: 2),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                ),
-                child: const Text(
-                  'Talk with us',
-                  style: TextStyle(color: accentColor, fontSize: 16),
-                ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -541,47 +574,48 @@ class HomeScreen extends GetView<HomeController> {
   Widget _buildWorkEnvironmentSection() {
     return Padding(
       padding: const EdgeInsets.all(40.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              height: 400, // Fixed height for image placeholder
-              decoration: BoxDecoration(
+      child: AspectRatio(
+        aspectRatio: 16 / 9, // Adjust as needed for desired image aspect ratio
+        child: Stack(
+          children: [
+            // Background Image
+            Positioned.fill(
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                // This `color` acts as a placeholder for the image.
-                // In a real app, replace this with `DecorationImage`
-                // using `Image.asset('assets/images/your_image.png')`
-                color: secondaryTextColor.withOpacity(0.3),
-              ),
-              child: const Center(
-                child: Text(
-                  'Image Placeholder 1',
-                  style: TextStyle(color: textColor),
+                child: Image.asset(
+                  'images/b0bac2dfc523ad081176ec591dda8634f7572dbe.png',
+                  fit: BoxFit.cover, // Ensures the image fills the space
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 40), // Spacing between image and text
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'It\'s also about creating the\nbest work environment.',
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    height: 1.2,
+            // Text and Button Overlay
+            Padding(
+              padding: const EdgeInsets.all(
+                30.0,
+              ), // Padding for the content over the image
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Center content vertically
+                children: [
+                  const Text(
+                    'It\'s also about creating the\nbest work environment.',
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                _buildElevatedButton('About Us', () {}),
-              ],
+                  const SizedBox(height: 20),
+                  _buildElevatedButton('About Us', Colors.white, () {
+                    Get.toNamed(Routes.ABOUTUS); // Navigate to About Us route
+                  }),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -590,56 +624,61 @@ class HomeScreen extends GetView<HomeController> {
   Widget _buildAcademySection() {
     return Padding(
       padding: const EdgeInsets.all(40.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  '/academy',
-                  style: TextStyle(
-                    color: accentColor,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Sharing knowledge and\ngrowing as a community',
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    height: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _buildElevatedButton('Open Courses', () {}),
-              ],
-            ),
-          ),
-          const SizedBox(width: 40), // Spacing between text and image
-          Expanded(
-            child: Container(
-              height: 400, // Fixed height for image placeholder
-              decoration: BoxDecoration(
+      child: AspectRatio(
+        aspectRatio: 16 / 9, // Adjust as needed for desired image aspect ratio
+        child: Stack(
+          children: [
+            // Background Image
+            Positioned.fill(
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                // This `color` acts as a placeholder for the image.
-                // In a real app, replace this with `DecorationImage`
-                // using `Image.asset('assets/images/your_image_2.png')`
-                color: secondaryTextColor.withOpacity(0.3),
-              ),
-              child: const Center(
-                child: Text(
-                  'Image Placeholder 2',
-                  style: TextStyle(color: textColor),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('images/academy.png'),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+
+                  // Placeholder for the image. Replace with Image.asset or NetworkImage. Placeholder color
                 ),
               ),
             ),
-          ),
-        ],
+            // Text and Button Overlay
+            Padding(
+              padding: const EdgeInsets.all(
+                30.0,
+              ), // Padding for the content over the image
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Center content vertically
+                children: [
+                  const Text(
+                    '/academy',
+                    style: TextStyle(
+                      color: accentColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Sharing knowledge and\ngrowing as a community',
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildElevatedButton('Open Courses', Colors.white, () {}),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -666,7 +705,12 @@ class HomeScreen extends GetView<HomeController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildElevatedButton('Download App', () {}, icon: Icons.download),
+              _buildElevatedButton(
+                'Download App',
+                Colors.white,
+                () {},
+                icon: Icons.download,
+              ),
               const SizedBox(width: 20),
               OutlinedButton(
                 onPressed: () {},

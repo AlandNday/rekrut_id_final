@@ -124,11 +124,6 @@ class ContactUsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
                 ],
               ),
             ),
@@ -236,49 +231,9 @@ class ContactUsScreen extends StatelessWidget {
             const SizedBox(height: 40),
 
             // --- Map Placeholder Section ---
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 24.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  'https://placehold.co/600x300/4CAF50/FFFFFF?text=Map+Placeholder', // Placeholder image for the map
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 200,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 200,
-                    color: Colors.grey[300],
-                    child: const Center(
-                      child: Text('Failed to load map image'),
-                    ),
-                  ),
-                ),
-              ),
-            ),
             const SizedBox(height: 40),
 
             // --- Partner Logos Section ---
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildPartnerLogo('zoom'),
-                  _buildPartnerLogo('tinder'),
-                  _buildPartnerLogo(''), // Placeholder for third logo
-                ],
-              ),
-            ),
             const SizedBox(height: 60),
 
             // --- Footer Section ---
@@ -291,10 +246,6 @@ class ContactUsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
                   const SizedBox(height: 32),
                   _buildFooterSection(context, 'Company', [
                     'About Us',

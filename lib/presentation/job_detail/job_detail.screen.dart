@@ -14,16 +14,12 @@ class JobDetailScreen extends GetView<JobDetailController> {
   static const Color accentColor = Color(
     0xFFE040FB,
   ); // Vibrant pink/light purple for accents
-  static const Color textColor = Colors.white; // General text color
+  static const Color textColor = Colors.black; // General text color
   static const Color secondaryTextColor = Color(
     0xFFB39DDB,
   ); // Lighter purple for subtle text/icons
-  static const Color cardColor = Color(
-    0xFF6A1B9A,
-  ); // Slightly lighter purple for card backgrounds
-  static const Color greenDotColor = Color(
-    0xFF4CAF50,
-  ); // Green dot for "Permanent"
+  static const Color cardColor = Colors.white;
+  // Slightly lighter purple for card backgrounds
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +28,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildHeader(), // Top navigation and branding
+            // Top navigation and branding
             _buildJobDetailsPageTitle(), // "Job Details" title
             Obx(() {
               if (controller.isLoading.value) {
@@ -116,50 +112,6 @@ class JobDetailScreen extends GetView<JobDetailController> {
   }
 
   /// Builds the top header bar with logo, navigation links, and action buttons.
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      child: Row(
-        children: [
-          // Branding Logo (stylized 'R' - now "Job Portal")
-          const Text(
-            'Job Portal',
-            style: TextStyle(
-              color: textColor,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(width: 50), // Spacing after the logo
-          // Navigation links - Wrapped in an Expanded widget and Align for central positioning
-          Expanded(
-            child: Align(
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisSize:
-                    MainAxisSize.min, // Make the Row take minimum space
-                children: [
-                  _buildNavLink('Home'),
-                  _buildNavLink('Jobs'),
-                  _buildNavLink('About Us'),
-                  _buildNavLink('Contact Us'),
-                ],
-              ),
-            ),
-          ),
-
-          // Login/Register buttons
-          Row(
-            children: [
-              _buildTextButton('Login', () {}),
-              const SizedBox(width: 10),
-              _buildElevatedButton('Register', () {}),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
   /// Helper widget for creating navigation text buttons.
   Widget _buildNavLink(String text) {
@@ -169,10 +121,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
         onPressed: () {
           // Implement navigation logic here (e.g., Get.toNamed('/home'))
         },
-        child: Text(
-          text,
-          style: TextStyle(color: textColor.withOpacity(0.8), fontSize: 16),
-        ),
+        child: Text(text, style: TextStyle(color: Colors.white, fontSize: 16)),
       ),
     );
   }
@@ -215,15 +164,18 @@ class JobDetailScreen extends GetView<JobDetailController> {
 
   /// Builds the "Job Details" page title section.
   Widget _buildJobDetailsPageTitle() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 60),
-      alignment: Alignment.center,
-      child: const Text(
-        'Job Details',
-        style: TextStyle(
-          color: textColor,
-          fontSize: 60,
-          fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 60),
+        alignment: Alignment.center,
+        child: const Text(
+          'Job Details',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 60,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -237,7 +189,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
         Text(
           job.title,
           style: const TextStyle(
-            color: textColor,
+            color: Colors.white,
             fontSize: 40,
             fontWeight: FontWeight.bold,
           ),
@@ -273,7 +225,6 @@ class JobDetailScreen extends GetView<JobDetailController> {
               ),
             ),
             const SizedBox(width: 20),
-            _buildElevatedButton('Apply For Job', () {}),
           ],
         ),
       ],
@@ -289,7 +240,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
         const SizedBox(height: 10),
         Text(
           description,
-          style: TextStyle(color: secondaryTextColor, fontSize: 16),
+          style: TextStyle(color: Colors.white, fontSize: 16),
           textAlign: TextAlign.justify,
         ),
       ],
@@ -301,7 +252,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
     return Text(
       title,
       style: const TextStyle(
-        color: textColor,
+        color: Colors.white,
         fontSize: 24,
         fontWeight: FontWeight.bold,
       ),
@@ -390,19 +341,6 @@ class JobDetailScreen extends GetView<JobDetailController> {
           _buildOverviewRow(Icons.location_on, 'Location', job.location),
           const SizedBox(height: 20),
           // Placeholder for map image
-          Container(
-            height: 150,
-            decoration: BoxDecoration(
-              color: secondaryTextColor.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Center(
-              child: Text(
-                'Map Placeholder',
-                style: TextStyle(color: textColor, fontSize: 16),
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -439,7 +377,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
                         width: 8,
                         height: 8,
                         decoration: const BoxDecoration(
-                          color: greenDotColor,
+                          color: Colors.green,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -499,7 +437,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
     return TextField(
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: secondaryTextColor.withOpacity(0.7)),
+        hintStyle: TextStyle(color: Colors.white),
         filled: true,
         fillColor: primaryColor.withOpacity(0.5),
         border: OutlineInputBorder(
@@ -649,7 +587,9 @@ class JobDetailScreen extends GetView<JobDetailController> {
             alignment: Alignment.centerRight,
             child: OutlinedButton(
               onPressed: () {
-                // Navigate to this related job's details
+                controller.currentJobId.value = job.id;
+                controller.fetchJobDetail(job.id);
+                controller.saveidtostorage(job.id);
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: accentColor, width: 2),
@@ -734,7 +674,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
                     const Text(
                       'Job Categories',
                       style: TextStyle(
-                        color: textColor,
+                        color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -755,7 +695,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
                     const Text(
                       'Renumeration',
                       style: TextStyle(
-                        color: textColor,
+                        color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -768,7 +708,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
                           color: secondaryTextColor.withOpacity(0.7),
                         ),
                         filled: true,
-                        fillColor: primaryColor.withOpacity(0.5),
+                        fillColor: Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -837,10 +777,7 @@ class JobDetailScreen extends GetView<JobDetailController> {
           minimumSize: Size.zero, // Remove minimum size constraints
           tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Shrink tap target
         ),
-        child: Text(
-          text,
-          style: TextStyle(color: secondaryTextColor, fontSize: 14),
-        ),
+        child: Text(text, style: TextStyle(color: Colors.white, fontSize: 14)),
       ),
     );
   }

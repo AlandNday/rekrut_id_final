@@ -7,7 +7,7 @@ import 'package:rekrut_id_final/Models/jobdetail.dart'; // Path to your JobDetai
 class JobDetailController extends GetxController {
   // 1. We now require the jobId when creating the controller
   final _box = GetStorage();
-  final RxString _currentJobId = ''.obs; // Use a private variable
+  final RxString currentJobId = ''.obs; // Use a private variable
   static const String _jobIdKey = 'lastViewedJobId'; // Key for storage
   @override
   void onInit() {
@@ -17,14 +17,14 @@ class JobDetailController extends GetxController {
 
     if (idFromArguments != null && idFromArguments.isNotEmpty) {
       // If ID is passed via arguments, use it and save it
-      _currentJobId.value = idFromArguments;
+      currentJobId.value = idFromArguments;
       _box.write(_jobIdKey, idFromArguments); // Store in GetStorage
       print('Job ID from arguments and stored: $idFromArguments');
     } else {
       // If no ID from arguments (e.g., on refresh), try to load from storage
       final String? storedId = _box.read<String>(_jobIdKey);
       if (storedId != null && storedId.isNotEmpty) {
-        _currentJobId.value = storedId;
+        currentJobId.value = storedId;
         print('Job ID loaded from storage: $storedId');
       } else {
         // Handle case where ID is neither in arguments nor in storage
@@ -34,8 +34,8 @@ class JobDetailController extends GetxController {
     }
 
     // Only fetch if a valid ID was found
-    if (_currentJobId.value.isNotEmpty) {
-      fetchJobDetail(_currentJobId.value);
+    if (currentJobId.value.isNotEmpty) {
+      fetchJobDetail(currentJobId.value);
     }
   }
 
@@ -81,6 +81,10 @@ class JobDetailController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> saveidtostorage(String jobId) async {
+    _box.write(_jobIdKey, jobId);
   }
 
   // Example of how you might use this:

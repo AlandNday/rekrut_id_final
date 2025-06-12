@@ -13,13 +13,11 @@ class JobboardScreen extends GetView<JobboardController> {
   static const Color accentColor = Color(
     0xFFE040FB,
   ); // Vibrant pink/light purple for accents
-  static const Color textColor = Colors.white; // General text color
-  static const Color secondaryTextColor = Color(
-    0xFFB39DDB,
-  ); // Lighter purple for subtle text/icons
-  static const Color cardColor = Color(
-    0xFF6A1B9A,
-  ); // Slightly lighter purple for card backgrounds
+  static const Color textColor = Colors.black; // General text color
+  static const Color secondaryTextColor = Colors.black;
+  // Lighter purple for subtle text/icons
+  static Color cardColor =
+      Colors.white; // Slightly lighter purple for card backgrounds
   static const Color filterChipColor = Color(
     0xFF8860B7,
   ); // Color for selected filter chips
@@ -39,7 +37,7 @@ class JobboardScreen extends GetView<JobboardController> {
             _buildHeader(), // Top navigation and branding
             _buildJobsPageTitle(), // The "Jobs" page title
             _buildMainContentArea(), // Contains sidebar and job listings
-            _buildTopCompanySection(), // Section for top companies
+            // _buildTopCompanySection(), // Section for top companies
             _buildFooter(), // Bottom section with links and copyright
           ],
         ),
@@ -57,7 +55,7 @@ class JobboardScreen extends GetView<JobboardController> {
           const Text(
             'Job Portal',
             style: TextStyle(
-              color: textColor,
+              color: Colors.white,
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
@@ -73,7 +71,6 @@ class JobboardScreen extends GetView<JobboardController> {
                 children: [
                   _buildNavLink('Home'),
                   _buildNavLink('Jobs'),
-                  _buildNavLink('About Us'),
                   _buildNavLink('Contact Us'),
                 ],
               ),
@@ -99,12 +96,22 @@ class JobboardScreen extends GetView<JobboardController> {
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: TextButton(
         onPressed: () {
-          // Implement navigation logic here (e.g., Get.toNamed('/home'))
+          switch (text) {
+            case 'Home':
+              Get.toNamed(Routes.HOME);
+              break;
+            case 'Jobs':
+              Get.toNamed(Routes.JOBBOARD);
+              break; // Don't forget 'break' to exit the switch
+            case 'About Us':
+              Get.toNamed(Routes.ABOUTUS);
+              break; // Don't forget 'break' to exit the switch
+            case 'Contact Us':
+              Get.toNamed(Routes.CONTACTUS);
+              break; // Don't forget 'break' to exit the switch
+          }
         },
-        child: Text(
-          text,
-          style: TextStyle(color: textColor.withOpacity(0.8), fontSize: 16),
-        ),
+        child: Text(text, style: TextStyle(color: Colors.white, fontSize: 16)),
       ),
     );
   }
@@ -113,7 +120,7 @@ class JobboardScreen extends GetView<JobboardController> {
   Widget _buildTextButton(String text, VoidCallback onPressed) {
     return TextButton(
       onPressed: onPressed,
-      child: Text(text, style: TextStyle(color: textColor, fontSize: 16)),
+      child: Text(text, style: TextStyle(color: Colors.white, fontSize: 16)),
     );
   }
 
@@ -153,7 +160,7 @@ class JobboardScreen extends GetView<JobboardController> {
       child: const Text(
         'Jobs',
         style: TextStyle(
-          color: textColor,
+          color: Colors.white,
           fontSize: 60,
           fontWeight: FontWeight.bold,
         ),
@@ -614,10 +621,6 @@ class JobboardScreen extends GetView<JobboardController> {
           Text(text, style: TextStyle(color: secondaryTextColor, fontSize: 16)),
           Row(
             children: [
-              Text(
-                '$count',
-                style: TextStyle(color: secondaryTextColor, fontSize: 14),
-              ),
               SizedBox(
                 width: 24, // Standard checkbox size
                 height: 24,
@@ -749,7 +752,7 @@ class JobboardScreen extends GetView<JobboardController> {
             children: [
               Text(
                 'Showing ${controller.filteredJobs.length} of ${controller.allJobs.length} results',
-                style: TextStyle(color: secondaryTextColor, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               Obx(
                 () => Container(
@@ -954,43 +957,43 @@ class JobboardScreen extends GetView<JobboardController> {
   }
 
   /// Builds the "Top Company" section.
-  Widget _buildTopCompanySection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 60),
-      child: Column(
-        children: [
-          const Text(
-            'Top Company',
-            style: TextStyle(
-              color: textColor,
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'In sed adio, ipsum non sit met, olsit amet, oluptate quio et.',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: secondaryTextColor, fontSize: 16),
-          ),
-          const SizedBox(height: 40),
-          GridView.count(
-            crossAxisCount: 4, // 4 columns as per design
-            shrinkWrap: true, // Takes minimum space
-            physics: const NeverScrollableScrollPhysics(), // Disable scrolling
-            crossAxisSpacing: 30, // Spacing between columns
-            mainAxisSpacing: 30, // Spacing between rows
-            children: [
-              _buildCompanyCard('Bagre', 'B', '2 open jobs'),
-              _buildCompanyCard('Tesla', 'T', '18 open jobs'),
-              _buildCompanyCard('McDonald\'s', 'M', '12 open jobs'),
-              _buildCompanyCard('Apple', 'A', '9 open jobs'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildTopCompanySection() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 60),
+  //     child: Column(
+  //       children: [
+  //         const Text(
+  //           'Top Company',
+  //           style: TextStyle(
+  //             color: textColor,
+  //             fontSize: 40,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         Text(
+  //           'In sed adio, ipsum non sit met, olsit amet, oluptate quio et.',
+  //           textAlign: TextAlign.center,
+  //           style: TextStyle(color: secondaryTextColor, fontSize: 16),
+  //         ),
+  //         const SizedBox(height: 40),
+  //         GridView.count(
+  //           crossAxisCount: 4, // 4 columns as per design
+  //           shrinkWrap: true, // Takes minimum space
+  //           physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+  //           crossAxisSpacing: 30, // Spacing between columns
+  //           mainAxisSpacing: 30, // Spacing between rows
+  //           children: [
+  //             _buildCompanyCard('Bagre', 'B', '2 open jobs'),
+  //             _buildCompanyCard('Tesla', 'T', '18 open jobs'),
+  //             _buildCompanyCard('McDonald\'s', 'M', '12 open jobs'),
+  //             _buildCompanyCard('Apple', 'A', '9 open jobs'),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   /// Helper for building individual company cards in the "Top Company" section.
   Widget _buildCompanyCard(
@@ -1088,7 +1091,7 @@ class JobboardScreen extends GetView<JobboardController> {
                 const Text(
                   'Job',
                   style: TextStyle(
-                    color: textColor,
+                    color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -1096,7 +1099,7 @@ class JobboardScreen extends GetView<JobboardController> {
                 const SizedBox(height: 10),
                 const Text(
                   'Looking for the right job? Chances\nare you\'ll find it at RekrutID',
-                  style: TextStyle(color: secondaryTextColor, fontSize: 16),
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ],
             ),
@@ -1114,7 +1117,7 @@ class JobboardScreen extends GetView<JobboardController> {
                     const Text(
                       'Company',
                       style: TextStyle(
-                        color: textColor,
+                        color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -1134,7 +1137,7 @@ class JobboardScreen extends GetView<JobboardController> {
                     const Text(
                       'Job Categories',
                       style: TextStyle(
-                        color: textColor,
+                        color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -1155,7 +1158,7 @@ class JobboardScreen extends GetView<JobboardController> {
                     const Text(
                       'Renumeration',
                       style: TextStyle(
-                        color: textColor,
+                        color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -1164,11 +1167,9 @@ class JobboardScreen extends GetView<JobboardController> {
                     TextField(
                       decoration: InputDecoration(
                         hintText: 'Your email address',
-                        hintStyle: TextStyle(
-                          color: secondaryTextColor.withOpacity(0.7),
-                        ),
+                        hintStyle: TextStyle(color: Colors.black),
                         filled: true,
-                        fillColor: primaryColor.withOpacity(0.5),
+                        fillColor: Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -1237,10 +1238,7 @@ class JobboardScreen extends GetView<JobboardController> {
           minimumSize: Size.zero, // Remove minimum size constraints
           tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Shrink tap target
         ),
-        child: Text(
-          text,
-          style: TextStyle(color: secondaryTextColor, fontSize: 14),
-        ),
+        child: Text(text, style: TextStyle(color: Colors.white, fontSize: 14)),
       ),
     );
   }
@@ -1249,7 +1247,7 @@ class JobboardScreen extends GetView<JobboardController> {
   Widget _buildSocialIcon(IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Icon(icon, color: secondaryTextColor, size: 24),
+      child: Icon(icon, color: Colors.white, size: 24),
     );
   }
 }
