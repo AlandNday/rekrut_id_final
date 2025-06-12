@@ -234,7 +234,8 @@ class HomeScreen extends GetView<HomeController> {
               children: [
                 _buildCategoryCard(
                   title: 'Asama',
-                  image: 'images/asana.png',
+                  image:
+                      'https://res.cloudinary.com/dh1btqzox/image/upload/v1749698297/asana_ogdm1i.png',
                   description:
                       'managing all your work, planning, tasks, team coordination and projects using Asama.',
                   icon: Icons
@@ -246,7 +247,8 @@ class HomeScreen extends GetView<HomeController> {
                 // Figma Category Card
                 _buildCategoryCard(
                   title: 'Figma',
-                  image: 'images/figma.png',
+                  image:
+                      'https://res.cloudinary.com/dh1btqzox/image/upload/v1749698304/figma_ofc9q9.png',
                   description:
                       'integrating all the design and workflow elements into a simple layout in Figma',
                   icon: Icons.brush, // Placeholder icon
@@ -258,7 +260,8 @@ class HomeScreen extends GetView<HomeController> {
             _buildCategoryCard(
               // This card is centered in the original code, hence not in a Row
               title: 'Development',
-              image: 'images/code.png',
+              image:
+                  'https://res.cloudinary.com/dh1btqzox/image/upload/v1749698301/code_aj0j2t.png',
               description: 'To develop sites and applications ',
               icon: Icons
                   .design_services, // Placeholder icon, replace with actual design
@@ -343,7 +346,7 @@ class HomeScreen extends GetView<HomeController> {
           Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage(image)),
+              image: DecorationImage(image: NetworkImage(image)),
             ),
           ),
           const SizedBox(height: 20),
@@ -496,14 +499,16 @@ class HomeScreen extends GetView<HomeController> {
               children: [
                 Flexible(
                   flex: 1,
-                  child: Image.asset(
-                    'images/62beb4986f50ddd864c0a59e_forme-wrap.svg.png',
+                  child: Image.network(
+                    'https://res.cloudinary.com/dh1btqzox/image/upload/v1749698277/62beb4986f50ddd864c0a59e_forme-wrap.svg_nyq8te.png',
                   ),
                 ),
                 const SizedBox(width: 300),
                 Column(
                   children: [
-                    Image.asset('images/div(2).png'),
+                    Image.network(
+                      'https://res.cloudinary.com/dh1btqzox/image/upload/v1749698536/div_2_cnelet.png',
+                    ),
                     const SizedBox(height: 30),
                     Row(
                       children: [
@@ -582,8 +587,8 @@ class HomeScreen extends GetView<HomeController> {
             Positioned.fill(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  'images/b0bac2dfc523ad081176ec591dda8634f7572dbe.png',
+                child: Image.network(
+                  'https://res.cloudinary.com/dh1btqzox/image/upload/v1749698291/b0bac2dfc523ad081176ec591dda8634f7572dbe_tpcqm4.png',
                   fit: BoxFit.cover, // Ensures the image fills the space
                 ),
               ),
@@ -635,7 +640,9 @@ class HomeScreen extends GetView<HomeController> {
                 child: Container(
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('images/academy.png'),
+                      image: NetworkImage(
+                        'https://res.cloudinary.com/dh1btqzox/image/upload/v1749698293/academy_qfdgpe.png',
+                      ),
                       fit: BoxFit.fill,
                     ),
                   ),
