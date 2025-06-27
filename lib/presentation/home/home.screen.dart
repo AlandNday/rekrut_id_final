@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:rekrut_id_final/Models/jobmodel.dart';
 import 'package:rekrut_id_final/infrastructure/navigation/routes.dart';
 import 'package:rekrut_id_final/presentation/Jobboard/controllers/jobboard.controller.dart';
-import 'controllers/home.controller.dart';
+import 'controllers/home.controller.dart'; // Make sure this import is correct
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
@@ -19,12 +19,9 @@ class HomeScreen extends GetView<HomeController> {
     final JobboardController jobboardController =
         Get.find<JobboardController>();
 
-    // Scaffold provides the basic visual structure for the material design app.
     return Scaffold(
-      backgroundColor: primaryColor, // Set the main background color
+      backgroundColor: primaryColor,
       body: SingleChildScrollView(
-        // SingleChildScrollView allows the content to be scrollable if it overflows,
-        // which is good for ensuring content is always visible on different screen sizes.
         child: Column(
           children: [
             _buildHeader(), // Top navigation and branding
@@ -90,27 +87,53 @@ class HomeScreen extends GetView<HomeController> {
             ),
           ),
 
-          // Register/Login buttons
-          Row(
-            children: [
-              _buildTextButton('Register', () {}),
-              const SizedBox(width: 10),
-              _buildElevatedButton('Login', Colors.white, () {}),
-            ],
-          ),
+          // --- MODIFIED PART: Conditional rendering based on login state ---
+          Obx(() {
+            // Obx rebuilds this part of the widget tree when userName changes
+            if (controller.userName.value != null &&
+                controller.userName.value!.isNotEmpty) {
+              // User is logged in, show their name and a logout button
+              return Row(
+                children: [
+                  Text(
+                    'Hello, ${controller.userName.value}!',
+                    style: TextStyle(color: textColor, fontSize: 16),
+                  ),
+                  const SizedBox(width: 10),
+                  _buildElevatedButton('Logout', accentColor, () {
+                    controller
+                        .logout(); // Call logout method from HomeController
+                  }),
+                ],
+              );
+            } else {
+              // User is not logged in, show Register/Login buttons
+              return Row(
+                children: [
+                  _buildTextButton('Register', () {
+                    Get.toNamed(Routes.REGISTER);
+                  }),
+                  const SizedBox(width: 10),
+                  _buildElevatedButton('Login', Colors.white, () {
+                    Get.toNamed(Routes.LOGIN);
+                  }),
+                ],
+              );
+            }
+          }),
+          // --- END MODIFIED PART ---
         ],
       ),
     );
   }
 
   /// Helper widget for creating navigation text buttons.
-  Widget _buildNavLink(String text, String Route) {
+  Widget _buildNavLink(String text, String routeName) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: TextButton(
         onPressed: () {
-          switch (Route) {
-            // Changed to use Route parameter
+          switch (routeName) {
             case 'JOBBOARD':
               Get.toNamed(Routes.JOBBOARD);
               break;
@@ -121,9 +144,7 @@ class HomeScreen extends GetView<HomeController> {
               Get.toNamed(Routes.CONTACTUS);
               break;
             case 'HOME':
-              Get.toNamed(
-                Routes.HOME,
-              ); // Assuming you want to navigate to home itself
+              Get.toNamed(Routes.HOME);
               break;
             default:
               break;
@@ -213,7 +234,6 @@ class HomeScreen extends GetView<HomeController> {
                 Get.toNamed(Routes.JOBBOARD);
               }, icon: Icons.arrow_outward), // Elevated button with icon
               const SizedBox(width: 20), // Spacing between buttons
-              // OutlinedButton removed as per original comment
             ],
           ),
         ],
@@ -486,14 +506,12 @@ class HomeScreen extends GetView<HomeController> {
 
   /// Builds the section displaying partner company logos.
   Widget _buildCompanyLogosSection() {
-    // List of company names to display as placeholders for logos.
     return Container(
       color: const Color.fromARGB(62, 24, 177, 1),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 60),
         child: Column(
           children: [
-            // Action buttons below the logos
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -535,7 +553,6 @@ class HomeScreen extends GetView<HomeController> {
                           ),
                           child: const Text(
                             'Talk with us',
-
                             style: TextStyle(color: accentColor, fontSize: 16),
                           ),
                         ),
@@ -546,30 +563,6 @@ class HomeScreen extends GetView<HomeController> {
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  /// Helper widget for creating a placeholder for a company logo.
-  Widget _buildCompanyLogoPlaceholder(String name) {
-    return Container(
-      width: 120,
-      height: 60,
-      decoration: BoxDecoration(
-        color: cardColor.withOpacity(
-          0.5,
-        ), // Semi-transparent card color for placeholder
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: Text(
-          name.toUpperCase(), // Display company name as placeholder text
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: secondaryTextColor.withOpacity(0.8),
-            fontSize: 14,
-          ),
         ),
       ),
     );
